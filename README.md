@@ -61,7 +61,7 @@ All communications follow a structured format:
 * Robot ID
 * Command type
 * Payload data
-* Checksum / validation (if implemented)
+* Checksum / validation
 
 This ensures:
 
@@ -127,7 +127,7 @@ Base Station:
 Robot Nodes:
 
 * Any supported microcontroller (ESP32, Arduino, STM32, etc.)
-* Wireless module (if not integrated)
+* Wireless module
 
 ---
 
