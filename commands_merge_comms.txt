@@ -1,0 +1,25 @@
+1. WIFI
+
+{"id":2,"left":90,"right":90,"gripper":"open"}
+
+{"id":2,"left":90,"right":90,"gripper":"close"}
+
+{"id":2,"left":100,"right":80,"gripper":"close"}
+
+
+2. ESPNOW
+
+{"id":782,"left":100,"right":80}
+
+{"id":782,"left":90,"right":90}
+
+
+3. BLE
+
+{"id":501,"left":90,"right":90,"gripper":"open"}
+
+{"id":501,"left":90,"right":90,"gripper":"close"}
+
+{"id":501,"left":100,"right":80,"gripper":"close"}
+
+{"id":782,"left":100,"right":80}
