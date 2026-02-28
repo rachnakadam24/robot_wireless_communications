@@ -92,7 +92,7 @@ This ensures:
 
 ---
 
-## Repository Structure
+<!-- ## Repository Structure
 
 Example structure (adapt as needed):
 
@@ -112,7 +112,7 @@ robot_wireless_communications/
 └── common/
     ├── packet_format.h
     └── utilities/
-```
+``` -->
 
 Each robot folder contains firmware specific to its microcontroller and protocol.
 
