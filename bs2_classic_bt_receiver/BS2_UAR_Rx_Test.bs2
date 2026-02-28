@@ -1,0 +1,45 @@
+' {$STAMP BS2}
+' {$PBASIC 2.5}
+
+' ---------- UART from HC-05 ----------
+rxPin     PIN 5          ' Match your physical RX pin on BS2
+baud      CON 32          ' 19200 Baud, 8N1, True (Correct for BS2)
+TIMEOUT   CON 2000        ' 2 second wait for testing
+
+' ---------- Variables ----------
+idLo      VAR Byte
+idHi      VAR Byte
+leftV     VAR Byte
+rightV    VAR Byte
+gripV     VAR Byte
+rid       VAR Word
+
+' ---------- Initialization ----------
+DEBUG CLS, "--- BS2 RX TEST (19200 BAUD) ---", CR
+DEBUG "Waiting for '!!' header...", CR, CR
+
+' ---------- Main Loop ----------
+Main:
+  ' 1. Wait for the double header "!!"
+  ' 2. If no data arrives in 2 seconds, it jumps to NoData
+  SERIN rxPin, baud, TIMEOUT, NoData, [WAIT("!!"), idLo, idHi, leftV, rightV, gripV]
+
+  ' Calculate the 16-bit ID
+  rid = idLo + (idHi * 256)
+
+  ' 3. Display the Results
+  DEBUG HOME
+  DEBUG "PACKET RECEIVED!", CR
+  DEBUG "----------------", CR
+  DEBUG "Full ID:  ", DEC rid, "    ", CR
+  DEBUG "Left:     ", DEC leftV, "    ", CR
+  DEBUG "Right:    ", DEC rightV, "    ", CR
+  DEBUG "Gripper:  ", DEC gripV, "    ", CR
+  DEBUG "----------------", CR
+  DEBUG "Waiting for next packet...", CR
+
+  GOTO Main
+
+NoData:
+  DEBUG HOME, "Searching for HC-05 signal... (Check Wiring/Baud)", CR
+  GOTO Main
