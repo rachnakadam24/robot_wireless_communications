@@ -5,7 +5,7 @@
 // ---------- Pin Definitions ----------
 #define RX_PIN      7     
 #define TX_PIN      6
-#define ROB_ID      24     
+#define ROB_ID      248     
 #define LEFT_SERVO  13    
 #define RIGHT_SERVO 14
 #define GRIP_SERVO  12

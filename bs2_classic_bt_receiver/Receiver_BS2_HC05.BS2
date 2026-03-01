@@ -1,0 +1,65 @@
+' {$STAMP BS2}
+' {$PBASIC 2.5}
+
+' ---------- UART from HC-05 ----------
+rxPin     PIN 5
+baud      CON 84          ' 9600 True 8N1
+LISTEN_MS CON 20          ' Short listen window (matches servo timing)
+
+' ---------- SERVO PINS ----------
+PIN_G     CON 12
+PIN_L     CON 13
+PIN_R     CON 14
+
+' ---------- ID FILTER ----------
+MY_ID     CON 147
+FILTER_ON CON 1
+
+' ---------- Variables ----------
+idLo      VAR Byte
+idHi      VAR Byte
+leftV     VAR Byte
+rightV    VAR Byte
+gripV     VAR Byte
+rid       VAR Word
+
+pwL       VAR Word
+pwR       VAR Word
+pwG       VAR Word
+
+' ---------- Initialization ----------
+Start:
+  pwL = 1500 : pwR = 1500 : pwG = 500
+  DEBUG CLS, "BS2 ACTIVE. Continuous Refresh Mode.", CR
+
+' ---------- Main Loop ----------
+Main:
+  ' 1. Short Listen: Only wait 20ms for data.
+  ' If no data arrives, it jumps to 'Refresh' instead of 'Watchdog'
+  SERIN rxPin, baud, LISTEN_MS, Refresh, [WAIT("!!"), idLo, idHi, leftV, rightV, gripV]
+
+
+  ' 2. Process Data (Only if SERIN succeeded)
+  rid = idLo + (idHi * 256)
+
+  IF (FILTER_ON = 1) AND (rid <> MY_ID) THEN GOTO Refresh
+
+  ' Scale values only when new data is received
+  IF (leftV <= 180)  THEN pwL = (leftV * 100 / 18) + 1000
+  IF (rightV <= 180) THEN pwR = (rightV * 100 / 18) + 1000
+  IF (gripV <= 180)  THEN pwG = (gripV * 100 / 9) + 500
+
+  DEBUG HOME, "RX OK - ID:", DEC rid
+
+' ---------- Pulse Section ----------
+Refresh:
+  ' 3. Constant Refresh: This runs every loop, whether data was received or not.
+  ' This keeps the servos "alive" and moving.
+  PULSOUT PIN_L, (pwL / 2)
+  PULSOUT PIN_R, (pwR / 2)
+  PULSOUT PIN_G, (pwG / 2)
+
+  ' The PULSOUTs take ~4.5ms total. We need a small pause to hit the ~20ms target.
+  PAUSE 10
+
+  GOTO Main
